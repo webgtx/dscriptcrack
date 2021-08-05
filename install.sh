@@ -2,10 +2,16 @@
 #!/bin/sh
 
 if [[ $(whoami) == 'root' ]]; then
-    kaliRep="deb http://http.kali.org/kali kali-rolling main non-free contrib"
-    echo $kaliRep >> /etc/apt/sources.list
+    kaliRep='deb https://http.kali.org/kali kali-rolling main non-free contrib'
+    kaliGPG='https://archive.kali.org/archive-key.asc'
+    sh -c "echo $kaliRep > /etc/apt/sources.list.d/kali.list"
     apt upgrade -y
-    apt install aircrack-ng nmap boxes macchanger -y 
+    apt install gnupg -y
+    wget $kaliGPG
+    apt-key add archive-key.asc
+    apt update
+    apt install aircrack-ng nmap boxes macchanger tmux -y 
+
 
     echo "D-SCRIPTCRACK - was installed" | boxes -d stone
     echo "dxv1d@tuta.io | webgtx @ 2021" | boxes -d stone
